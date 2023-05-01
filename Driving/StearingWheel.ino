@@ -51,12 +51,12 @@ void StearingWheel()
     Lpower = (Lpower / 2);
     Rpower = (Rpower / 2);
   }
-  digitalWrite(FrontLeftMotorPower, abs(Lpower));
-  digitalWrite(MiddleLeftMotorPower, abs(Lpower));
-  digitalWrite(BackLeftMotorPower, abs(Lpower));
-  digitalWrite(FrontRightMotorPower, abs(Rpower));
-  digitalWrite(MiddleRightMotorPower, abs(Rpower));
-  digitalWrite(BackRightMotorPower, abs(Rpower));
+  analogWrite(FrontLeftMotorPower, abs(Lpower));
+  analogWrite(MiddleLeftMotorPower, abs(Lpower));
+  analogWrite(BackLeftMotorPower, abs(Lpower));
+  analogWrite(FrontRightMotorPower, abs(Rpower));
+  analogWrite(MiddleRightMotorPower, abs(Rpower));
+  analogWrite(BackRightMotorPower, abs(Rpower));
 
   digitalWrite(MiddleLeftServo, center);
   digitalWrite(MiddleRightServo, center);
