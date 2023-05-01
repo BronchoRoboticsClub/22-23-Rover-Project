@@ -51,12 +51,12 @@ void TokyoDrift()
   }
   Lpower = magL;
   Rpower = magL;
-  digitalWrite(FrontLeftMotorPower, abs(Lpower));
-  digitalWrite(MiddleLeftMotorPower, abs(Lpower));
-  digitalWrite(BackLeftMotorPower, abs(Lpower));
-  digitalWrite(FrontRightMotorPower, abs(Rpower));
-  digitalWrite(MiddleRightMotorPower, abs(Rpower));
-  digitalWrite(BackRightMotorPower, abs(Rpower));
+  analogWrite(FrontLeftMotorPower, abs(Lpower));
+  analogWrite(MiddleLeftMotorPower, abs(Lpower));
+  analogWrite(BackLeftMotorPower, abs(Lpower));
+  analogWrite(FrontRightMotorPower, abs(Rpower));
+  analogWrite(MiddleRightMotorPower, abs(Rpower));
+  analogWrite(BackRightMotorPower, abs(Rpower));
   int angle;
   if (LStickY >= 0)
   {
