@@ -151,34 +151,62 @@ void loop()
   elbowAngle = fabrik2D.getAngle(1) * RAD_TO_DEG;
   if(shoulderAngle > currentShoulderAngle)
   {
-    for(int i = currentshoulderAngle; i <= shoulderAngle; i+=1)
+    for(int i = currentshoulderAngle; i <= shoulderAngle; i+=5)
     {
-      shoulder.write(i);
+      if(i < shoulderAngle)
+      {
+        shoulder.write(i);  
+      }
+      else
+      {
+        shoulder.write(shoulderAngle)
+      }
       delay(10);
     }
   }
   else if(shoulderAngle <= currentShoulderAngle)
   {
-    for(int i = currentshoulderAngle; i >= shoulderAngle; i-=1)
+    for(int i = currentshoulderAngle; i >= shoulderAngle; i-=5)
     {
-      shoulder.write(i);
+      if(i > shoulderAngle)
+      {
+        shoulder.write(i);  
+      }
+      else
+      {
+        shoulder.write(shoulderAngle)
+      }
       delay(10);
     }
   }
 
   if(elbowAngle > currentElbowAngle)
   {
-    for(int i = currentElbowAngle; i <= elbowAngle; i+=1)
+    for(int i = currentElbowAngle; i <= elbowAngle; i+=5)
     {
-      elbow.write(i);
+      if(i < elbowAngle)
+      {
+        elbow.write(i);  
+      }
+      else
+      {
+        shoulder.write(elbowAngle)
+      }
       delay(10);
     }
   }
   else if(elbowAngle < currentElbowAngle)
   {
-    for(int i = currentElbowAngle; i >= elbowAngle; i-=1)
+    for(int i = currentElbowAngle; i >= elbowAngle; i-=5)
     {
-      elbow.write(i);
+      if(i > elbowAngle)
+      {
+        elbow.write(i);  
+      }
+      else
+      {
+        shoulder.write(elbowAngle)
+      }
       delay(10);
     }
   }
