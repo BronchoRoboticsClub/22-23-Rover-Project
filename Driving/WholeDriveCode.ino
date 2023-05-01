@@ -1,24 +1,24 @@
-#define FrontRightMotorPower 6
-#define MiddleRightMotorPower 12
-#define BackRightMotorPower 9
-#define FrontLeftMotorPower 3
-#define MiddleLeftMotorPower 12
-#define BackLeftMotorPower 5
-#define FrontRightMotorDirection 7
-#define MiddleRightMotorDirection 12
-#define BackRightMotorDirection 8
-#define FrontLeftMotorDirection 2
+#define FrontRightMotorPower 3
+#define MiddleRightMotorPower 5
+#define BackRightMotorPower 6
+#define FrontLeftMotorPower 9
+#define MiddleLeftMotorPower 10
+#define BackLeftMotorPower 11
+#define FrontRightMotorDirection 2
+#define MiddleRightMotorDirection 4
+#define BackRightMotorDirection 7
+#define FrontLeftMotorDirection 8
 #define MiddleLeftMotorDirection 12
-#define BackLeftMotorDirection 4
-#define FrontRightServo 12
-#define MiddleRightServo 12
-#define BackRightServo 12
-#define FrontLeftServo 12
-#define MiddleLeftServo 12
-#define BackLeftServo 12
+#define BackLeftMotorDirection 13
+#define FrontRightServo 14
+#define MiddleRightServo 15
+#define BackRightServo 16
+#define FrontLeftServo 17
+#define MiddleLeftServo 18
+#define BackLeftServo 19
 #define num 64
 int Lpower, Rpower;
-int8_t LStickX, LStickY, RStickX, RStickY, Cross, Circle, Square, Triangle;
+int8_t LStickX, LStickY, RStickX, RStickY, Cross, Circle, Square, Triangle, RTrigger;
 int deadZone = 20, endZone = 140, magL, magR, center = 90, driveMode = 2;
 double degreeL, degreeR;
 byte inputs[num] = {};
@@ -116,19 +116,20 @@ void TankDrive()
     digitalWrite(MiddleRightMotorDirection, LOW);
     digitalWrite(BackRightMotorDirection, LOW);
   }
+  Lpower = LStickY;
+  Rpower = RStickY;
   if (RTrigger == 1)
   {
     Lpower = (Lpower / 2);
     Rpower = (Rpower / 2);
   }
-  analogWrite(FrontLeftMotorPower, abs(LStickY));
-  analogWrite(MiddleLeftMotorPower, abs(LStickY));
-  analogWrite(BackLeftMotorPower, abs(LStickY));
-  analogWrite(FrontRightMotorPower, abs(RStickY));
-  analogWrite(MiddleRightMotorPower, abs(RStickY));
-  analogWrite(BackRightMotorPower, abs(RStickY));
+  analogWrite(FrontLeftMotorPower, abs(Lpower));
+  analogWrite(MiddleLeftMotorPower, abs(Lpower));
+  analogWrite(BackLeftMotorPower, abs(Lpower));
+  analogWrite(FrontRightMotorPower, abs(Rpower));
+  analogWrite(MiddleRightMotorPower, abs(Rpower));
+  analogWrite(BackRightMotorPower, abs(Rpower));
 }
-
 
 
 void TokyoDrift()
@@ -151,19 +152,19 @@ void TokyoDrift()
     digitalWrite(MiddleRightMotorDirection, LOW);
     digitalWrite(BackRightMotorDirection, LOW);
   }
-  /*if(PS4->R2() == true)
-    {
-    magL = (magL/2);
-    }*/
+  if (RTrigger == 1)
+  {
+    Lpower = (Lpower / 2);
+    Rpower = (Rpower / 2);
+  }
   Lpower = magL;
   Rpower = magL;
-  digitalWrite(FrontLeftMotorPower, abs(Lpower));
-  digitalWrite(MiddleLeftMotorPower, abs(Lpower));
-  digitalWrite(BackLeftMotorPower, abs(Lpower));
-  digitalWrite(FrontRightMotorPower, abs(Rpower));
-  digitalWrite(MiddleRightMotorPower, abs(Rpower));
-  digitalWrite(BackRightMotorPower, abs(Rpower));
-
+  analogWrite(FrontLeftMotorPower, abs(Lpower));
+  analogWrite(MiddleLeftMotorPower, abs(Lpower));
+  analogWrite(BackLeftMotorPower, abs(Lpower));
+  analogWrite(FrontRightMotorPower, abs(Rpower));
+  analogWrite(MiddleRightMotorPower, abs(Rpower));
+  analogWrite(BackRightMotorPower, abs(Rpower));
   int angle;
   if (LStickY >= 0)
   {
@@ -205,20 +206,20 @@ void StearingWheel()
   }
   Lpower = LStickY;
   Rpower = LStickY;
-  /*if(PS4->R2() == true)
-    {
-    Lpower = (Lpower/2);
-    Rpower = (Rpower/2);
-    }*/
-  digitalWrite(FrontLeftMotorPower, abs(Lpower));
-  digitalWrite(MiddleLeftMotorPower, abs(Lpower));
-  digitalWrite(BackLeftMotorPower, abs(Lpower));
-  digitalWrite(FrontRightMotorPower, abs(Rpower));
-  digitalWrite(MiddleRightMotorPower, abs(Rpower));
-  digitalWrite(BackRightMotorPower, abs(Rpower));
+  if (RTrigger == 1)
+  {
+    Lpower = (Lpower / 2);
+    Rpower = (Rpower / 2);
+  }
+  analogWrite(FrontLeftMotorPower, abs(Lpower));
+  analogWrite(MiddleLeftMotorPower, abs(Lpower));
+  analogWrite(BackLeftMotorPower, abs(Lpower));
+  analogWrite(FrontRightMotorPower, abs(Rpower));
+  analogWrite(MiddleRightMotorPower, abs(Rpower));
+  analogWrite(BackRightMotorPower, abs(Rpower));
 
-  digitalWrite(MiddleLeftServo, 90);
-  digitalWrite(MiddleRightServo, 90);
+  digitalWrite(MiddleLeftServo, center);
+  digitalWrite(MiddleRightServo, center);
   RStickX = map(RStickX, -255, 255, 0, 180);
   digitalWrite(FrontLeftServo, RStickX);
   digitalWrite(FrontRightServo, RStickX);
@@ -226,6 +227,50 @@ void StearingWheel()
   digitalWrite(BackLeftServo, RStickX);
   digitalWrite(BackRightServo, RStickX);
 }
+
+
+void JoystickZones()
+{
+  if (LStickX <= deadZone && LStickX >= -deadZone) {
+    LStickX = 0;
+  }
+  if (LStickY <= deadZone && LStickY >= -deadZone) {
+    LStickY = 0;
+  }
+  if (RStickX <= deadZone && RStickX >= -deadZone) {
+    RStickX = 0;
+  }
+  if (RStickY <= deadZone && RStickY >= -deadZone) {
+    RStickY = 0;
+  }
+
+  if (LStickX > endZone) {
+    LStickX = 255;
+  }
+  if (LStickY > endZone) {
+    LStickY = 255;
+  }
+  if (RStickX > endZone) {
+    RStickX = 255;
+  }
+  if (RStickY > endZone) {
+    RStickY = 255;
+  }
+
+  if (LStickX < -endZone) {
+    LStickX = -255;
+  }
+  if (LStickY < -endZone) {
+    LStickY = -255;
+  }
+  if (RStickX < -endZone) {
+    RStickX = -255;
+  }
+  if (RStickY < -endZone) {
+    RStickY = -255;
+  }
+}
+
 
 void setup()
 {
@@ -283,6 +328,7 @@ void loop()
       Square = inputs[i + 5];
       Circle = inputs[i + 6];
       Triangle = inputs[i + 7];
+      RTrigger = inputs[i + 8];
       LStickX = map(LStickX, 0, 1024, -255, 255);
       LStickY = map(LStickY, 0, 1024, -255, 255);
       RStickX = map(RStickX, 0, 1024, -255, 255);
@@ -290,87 +336,45 @@ void loop()
       Serial.flush();
     }
   }
-  if (LStickX <= deadZone && LStickX >= -deadZone) {
-    LStickX = 0;
-  }
-  if (LStickY <= deadZone && LStickY >= -deadZone) {
-    LStickY = 0;
-  }
-  if (RStickX <= deadZone && RStickX >= -deadZone) {
-    RStickX = 0;
-  }
-  if (RStickY <= deadZone && RStickY >= -deadZone) {
-    RStickY = 0;
-  }
-
-  if (LStickX > endZone) {
-    LStickX = 255;
-  }
-  if (LStickY > endZone) {
-    LStickY = 255;
-  }
-  if (RStickX > endZone) {
-    RStickX = 255;
-  }
-  if (RStickY > endZone) {
-    RStickY = 255;
-  }
-
-  if (LStickX < -endZone) {
-    LStickX = -255;
-  }
-  if (LStickY < -endZone) {
-    LStickY = -255;
-  }
-  if (RStickX < -endZone) {
-    RStickX = -255;
-  }
-  if (RStickY < -endZone) {
-    RStickY = -255;
-  }
-
+  JoystickZones();
   magL = sqrt(sq(LStickX) + sq(LStickY));
   magR = sqrt(sq(RStickX) + sq(RStickY));
   degreeL = atan(LStickY / LStickX);
   degreeR = atan(RStickY / RStickX);
-
-  TankDrive();
-
-  if(Square == 1)
-    {
+  if (Square == 1)
+  {
     driveMode = 1;
-    }
-    else if(Cross == 1)
-    {
+  }
+  else if (Cross == 1)
+  {
     driveMode = 2;
-    }
-    else if(Circle == 1)
-    {
+  }
+  else if (Circle == 1)
+  {
     driveMode = 3;
-    }
-    else if(Triangle == 1)
-    {
+  }
+  else if (Triangle == 1)
+  {
     driveMode = 4;
-    }
+  }
 
-    switch (driveMode)
-    {
+  switch (driveMode)
+  {
     case 1:
-    {
-      LeftJoystickDrive();
-    }
+      {
+        LeftJoystickDrive();
+      }
     case 2:
-    {
-      TankDrive();
-    }
+      {
+        TankDrive();
+      }
     case 3:
-    {
-      TokyoDrift();
-    }
+      {
+        TokyoDrift();
+      }
     case 4:
-    {
-      StearingWheel();
-    }
-    }
-  //Serial.print(Lpower); Serial.print(" "); Serial.println(Rpower);
+      {
+        StearingWheel();
+      }
+  }
 }
