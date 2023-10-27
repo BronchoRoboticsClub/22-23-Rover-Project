@@ -24,10 +24,14 @@ double degreeL, degreeR;
 byte inputs[num] = {};
 byte header[4] = {255, 254, 253, 252};
 
+
+//used when right joystick is being used to move the arm
+
 void LeftJoystickDrive()
 {
   Lpower = magL;
   Rpower = magL;
+  //keeping the servos centered because in turns by varying power on the side instead of pivoting the wheels
   digitalWrite(FrontLeftServo, center);
   digitalWrite(MiddleLeftServo, center);
   digitalWrite(BackLeftServo, center);
@@ -37,12 +41,17 @@ void LeftJoystickDrive()
 
   if (LStickY >= 0)
   {
+    //if the left joystick is pushed forward then the motors are turned on and push the rover forward
     digitalWrite(FrontLeftMotorDirection, HIGH);
     digitalWrite(MiddleLeftMotorDirection, HIGH);
     digitalWrite(BackLeftMotorDirection, HIGH);
     digitalWrite(FrontRightMotorDirection, HIGH);
     digitalWrite(MiddleRightMotorDirection, HIGH);
     digitalWrite(BackRightMotorDirection, HIGH);
+    
+    //if the joystick is moved to the side at all, it finds the angle of the joystick, and then sets the motors to the power of the sign
+    //the opposite side of the triangle of the angle is used to determine the magnitude of power, 
+    //1st and 4th quadarant left side of rover has more power
     if (LStickX >= 0)
     {
       Rpower = (Rpower * degreeL);
@@ -54,6 +63,10 @@ void LeftJoystickDrive()
   }
   else
   {
+    //if the joystick is moved to the side at all, it finds the angle of the joystick, and then sets the motors to the power of the sign
+    //the opposite side of the triangle of the angle is used to determine the magnitude of power, 
+    //2nd and 3rd quadarnt right side has more power
+    
     digitalWrite(FrontLeftMotorDirection, LOW);
     digitalWrite(MiddleLeftMotorDirection, LOW);
     digitalWrite(BackLeftMotorDirection, LOW);
@@ -69,11 +82,13 @@ void LeftJoystickDrive()
       Rpower = (Rpower * degreeL);
     }
   }
+  //go slower if right trigger is held down, power is halved
   if (RTrigger == 1)
   {
     Lpower = (Lpower / 2);
     Rpower = (Rpower / 2);
   }
+  //assigning the power gotten from the above if statements for the motors based on the size they are 
   analogWrite(FrontLeftMotorPower, abs(Lpower));
   analogWrite(MiddleLeftMotorPower, abs(Lpower));
   analogWrite(BackLeftMotorPower, abs(Lpower));
@@ -86,12 +101,16 @@ void LeftJoystickDrive()
 
 void TankDrive()
 {
+  //keeping the servos centered because in turns by varying power on the side instead of pivoting the wheels
+
   digitalWrite(FrontLeftServo, center);
   digitalWrite(MiddleLeftServo, center);
   digitalWrite(BackLeftServo, center);
   digitalWrite(FrontRightServo, center);
   digitalWrite(MiddleRightServo, center);
   digitalWrite(BackRightServo, center);
+
+  //manually pivot rover by controlling both joysticks, each one drives the 3 motors on that side
   if (LStickY >= 0)
   {
     digitalWrite(FrontLeftMotorDirection, HIGH);
